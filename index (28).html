@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YT Studio Pro Editable</title>
+    <!-- Roboto Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <!-- Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+
+    <style>
+        :root {
+            --bg-black: #000000;
+            --bg-dark: #0f0f0f;
+            --card-bg: #1f1f1f;
+            --text-white: #ffffff;
+            --text-gray: #aaaaaa;
+            --border-color: #303030;
+            --green: #2ba640;
+            --icon-gray: #717171;
+        }
+
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-black);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            color: var(--text-white);
+        }
+
+        .app-frame {
+            width: 100%;
+            max-width: 412px;
+            background: var(--bg-dark);
+            min-height: 100vh;
+            position: relative;
+            padding-bottom: 60px;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+            padding: 0 12px;
+            background: var(--bg-dark);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .header-left { display: flex; align-items: center; gap: 4px; }
+        .yt-logo-svg { width: 34px; height: auto; }
+        .header-title {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            color: #fff;
+            margin-left: 2px;
+            padding-top: 2px;
+        }
+        .header-right { display: flex; align-items: center; gap: 18px; }
+        .icon-btn { color: #f1f1f1; font-size: 28px !important; cursor: pointer; }
+        .bell-wrapper { position: relative; display: flex; }
+        .bell-wrapper::after {
+            content: ''; position: absolute; top: 2px; right: 3px;
+            width: 8px; height: 8px; background-color: #cc0000;
+            border-radius: 50%; border: 1px solid var(--bg-dark);
+        }
+        
+        /* CLICKABLE IMAGES styles */
+        .profile-pic {
+            width: 28px; height: 28px; border-radius: 50%;
+            background-image: url('https://i.postimg.cc/Z5PbZCBm/1769216926989.png');
+            background-size: cover; background-position: center; border: 1px solid #555;
+            cursor: pointer;
+        }
+
+        /* --- CHANNEL --- */
+        .channel-section { display: flex; align-items: center; padding: 20px 16px; gap: 16px; }
+        
+        .big-logo { width: 80px; height: 80px; flex-shrink: 0; cursor: pointer; border-radius: 50%; overflow: hidden; }
+        .logo-svg { width: 100%; height: 100%; object-fit: cover; }
+        
+        .channel-info { display: flex; flex-direction: column; }
+        .ch-name { font-size: 18px; font-weight: 500; margin-bottom: 2px; }
+        .ch-subs { font-size: 28px; font-weight: 700; line-height: 1.1; cursor: pointer; }
+        .ch-label { font-size: 13px; color: var(--text-gray); margin-top: 2px; }
+
+        /* --- SECTIONS COMMON --- */
+        .section-wrap { padding: 0 12px 20px 12px; }
+        .sec-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+        .sec-title { font-size: 19px; font-weight: 700; }
+        .sec-days { font-size: 13px; color: var(--text-gray); }
+
+        /* --- ANALYTICS CARDS --- */
+        .grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            height: 80px;
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .st-label { font-size: 12px; color: var(--text-gray); margin-bottom: 6px; }
+        .st-val-row { display: flex; align-items: center; gap: 6px; }
+        .st-num { font-size: 20px; font-weight: 700; letter-spacing: -0.5px; cursor: pointer; }
+
+        .icon-check-outline { font-size: 18px !important; color: var(--green); }
+        .icon-solid {
+            font-family: 'Material Symbols Rounded';
+            font-size: 18px !important;
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .green-fill { color: var(--green); }
+        .gray-fill { color: var(--icon-gray); }
+
+        /* --- LATEST CONTENT --- */
+        .content-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .cc-top { display: flex; padding: 12px; }
+        
+        /* THUMBNAIL STYLE */
+        .cc-thumb { 
+            width: 80px; height: 46px; border-radius: 4px; margin-right: 12px; 
+            object-fit: cover; /* This makes sure 1280x720 fills the box nicely */
+            cursor: pointer; 
+        }
+
+        .cc-info { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .cc-title {
+            font-size: 14px; font-weight: 400; line-height: 1.2;
+            margin-bottom: 4px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+            max-width: 220px; cursor: pointer;
+        }
+        .cc-time { font-size: 12px; color: var(--text-gray); cursor: pointer; }
+
+        /* Action Bar */
+        .cc-actions {
+            display: flex; align-items: center; padding: 0 12px 12px 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .act-group { display: flex; align-items: center; margin-right: 12px; font-size: 14px; }
+        .dollar-group { margin-right: 8px; }
+        
+        .act-icon { font-size: 20px !important; margin-right: 4px; }
+        .text-green { color: var(--green); }
+        .arr-up { margin-left: auto; color: var(--text-gray); transform: rotate(180deg); }
+        
+        .act-val { cursor: pointer; font-weight: 500; }
+
+        /* Detail Rows */
+        .det-row { display: flex; justify-content: space-between; align-items: center; padding: 12px; font-size: 14px; }
+        .det-label { color: var(--text-gray); }
+        .det-right { display: flex; align-items: center; gap: 8px; }
+        .det-val { font-weight: 500; cursor: pointer; }
+        .chev-right { font-size: 18px !important; color: var(--text-gray); }
+
+        /* --- BOTTOM NAV --- */
+        .nav-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            max-width: 412px; margin: 0 auto;
+            background: var(--bg-dark); border-top: 1px solid var(--border-color);
+            height: 54px; display: flex; justify-content: space-around;
+            align-items: center; padding-bottom: 2px; z-index: 500;
+        }
+        .nav-item { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 20%; cursor: pointer; color: #f1f1f1; opacity: 0.6; }
+        .nav-item.active { opacity: 1; }
+        .nav-item.active .nav-icon { font-variation-settings: 'FILL' 1; }
+        .nav-icon { font-size: 24px !important; margin-bottom: 3px; }
+        .nav-text { font-size: 10px; font-weight: 400; white-space: nowrap; }
+
+        /* Input styling for editing */
+        .edit-input {
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid var(--green);
+            color: #fff;
+            font-size: inherit;
+            font-weight: inherit;
+            width: 100%;
+            outline: none;
+            padding: 0;
+            margin: 0;
+            font-family: inherit;
+        }
+
+    </style>
+</head>
+<body>
+
+    <!-- Hidden File Input for Image Upload -->
+    <input type="file" id="imageUpload" accept="image/*" style="display: none;">
+
+    <div class="app-frame">
+        
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <svg class="yt-logo-svg" viewBox="0 0 100 70">
+                    <rect width="100" height="70" rx="15" fill="#FF0000"/>
+                    <path d="M70 35L35 55V15L70 35Z" fill="white"/>
+                </svg>
+                <span class="header-title">Studio</span>
+            </div>
+            <div class="header-right">
+                <span class="material-symbols-outlined icon-btn">add_circle</span>
+                <div class="bell-wrapper">
+                    <span class="material-symbols-outlined icon-btn">notifications</span>
+                </div>
+                <!-- ID: img-profile-header -->
+                <div class="profile-pic" id="img-profile-header"></div>
+            </div>
+        </div>
+
+        <!-- CHANNEL INFO -->
+        <div class="channel-section">
+            <!-- ID: img-channel-logo -->
+            <div class="big-logo" id="img-channel-logo">
+                <svg class="logo-svg" viewBox="0 0 100 100">
+                    <path d="M50 15 L15 50 L50 85 L85 50 Z" fill="#00b2e3"/>
+                    <path d="M50 35 L30 50 L50 65 L70 50 Z" fill="#fff" opacity="0.3"/> 
+                    <circle cx="50" cy="35" r="7" fill="#fff" />
+                </svg>
+            </div>
+            <div class="channel-info">
+                <div class="ch-name editable-text" id="txt-ch-name">Uptodown</div>
+                <div class="ch-subs editable-text" id="txt-ch-subs">254,776</div>
+                <div class="ch-label">Total subscribers</div>
+            </div>
+        </div>
+
+        <!-- ANALYTICS GRID -->
+        <div class="section-wrap">
+            <div class="sec-head">
+                <div class="sec-title">Channel analytics</div>
+                <div class="sec-days">Last 28 days</div>
+            </div>
+
+            <div class="grid-2x2">
+                <div class="stat-card">
+                    <div class="st-label">Views</div>
+                    <div class="st-val-row">
+                        <div class="st-num editable-text" id="stat-views">365</div>
+                        <span class="material-symbols-outlined icon-check-outline">check_circle</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="st-label">Watch time (hours)</div>
+                    <div class="st-val-row">
+                        <div class="st-num editable-text" id="stat-watch">3.6</div>
+                        <span class="material-symbols-rounded icon-solid green-fill">arrow_circle_up</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="st-label">Subscribers</div>
+                    <div class="st-val-row">
+                        <div class="st-num editable-text" id="stat-subs">+5</div>
+                        <span class="material-symbols-rounded icon-solid gray-fill">arrow_circle_down</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="st-label">Estimated revenue</div>
+                    <div class="st-val-row">
+                        <div class="st-num editable-text" id="stat-rev">US$0.28</div>
+                        <span class="material-symbols-outlined icon-check-outline">check_circle</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LATEST PUBLISHED CONTENT -->
+        <div class="section-wrap">
+            <div class="sec-head">
+                <div class="sec-title">Latest published content</div>
+            </div>
+
+            <div class="content-container">
+                <div class="cc-top">
+                    <!-- ID: img-video-thumb (Click to change) -->
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" class="cc-thumb" id="img-video-thumb" alt="Thumb">
+                    <div class="cc-info">
+                        <div class="cc-title editable-text" id="txt-vid-title">Monetization policies at...</div>
+                        <div class="cc-time editable-text" id="txt-vid-time">First 12 hours, 41 minutes</div>
+                    </div>
+                </div>
+
+                <!-- Stats Row -->
+                <div class="cc-actions">
+                    <div class="act-group text-green dollar-group">
+                        <span class="material-symbols-outlined act-icon">attach_money</span>
+                    </div>
+                    
+                    <div class="act-group">
+                        <span class="material-symbols-outlined act-icon">bar_chart</span>
+                        <span class="act-val editable-text" id="act-views">89</span>
+                    </div>
+                    <div class="act-group">
+                        <span class="material-symbols-outlined act-icon">thumb_up</span>
+                        <span class="act-val editable-text" id="act-likes">40</span>
+                    </div>
+                    <div class="act-group">
+                        <span class="material-symbols-outlined act-icon">chat_bubble</span>
+                        <span class="act-val editable-text" id="act-comments">24</span>
+                    </div>
+                    <span class="material-symbols-outlined arr-up">expand_more</span>
+                </div>
+
+                <div class="det-row">
+                    <div class="det-label">Ranking by views</div>
+                    <div class="det-right">
+                        <div class="det-val">6 of 10</div>
+                        <span class="material-symbols-outlined chev-right">navigate_next</span>
+                    </div>
+                </div>
+
+                <div class="det-row">
+                    <div class="det-label">Views</div>
+                    <div class="det-right">
+                        <div class="det-val editable-text" id="det-views">89</div>
+                        <span class="material-symbols-outlined icon-check-outline">check_circle</span>
+                    </div>
+                </div>
+
+                <div class="det-row">
+                    <div class="det-label">Average percentage viewed</div>
+                    <div class="det-right">
+                        <div class="det-val editable-text" id="det-percent">62.2%</div>
+                        <span class="material-symbols-rounded icon-solid gray-fill">arrow_circle_down</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTTOM NAV -->
+        <div class="nav-bar">
+            <div class="nav-item active">
+                <span class="material-symbols-outlined nav-icon">dashboard</span>
+                <span class="nav-text">Dashboard</span>
+            </div>
+            <div class="nav-item">
+                <span class="material-symbols-outlined nav-icon">video_library</span>
+                <span class="nav-text">Content</span>
+            </div>
+            <div class="nav-item">
+                <span class="material-symbols-outlined nav-icon">analytics</span>
+                <span class="nav-text">Analytics</span>
+            </div>
+            <div class="nav-item">
+                <span class="material-symbols-outlined nav-icon">chat_bubble_outline</span>
+                <span class="nav-text">Comments</span>
+            </div>
+            <div class="nav-item">
+                <span class="material-symbols-outlined nav-icon">monetization_on</span>
+                <span class="nav-text">Earn</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JAVASCRIPT: Logic for Persistence and Editing -->
+    <script>
+        const STORAGE_KEY_PREFIX = "yt_studio_clone_";
+        const fileInput = document.getElementById('imageUpload');
+        let currentImgTarget = null;
+
+        // IDs of all text fields to save
+        const textIds = [
+            'txt-ch-name', 'txt-ch-subs', 
+            'stat-views', 'stat-watch', 'stat-subs', 'stat-rev',
+            'txt-vid-title', 'txt-vid-time',
+            'act-views', 'act-likes', 'act-comments',
+            'det-views', 'det-percent'
+        ];
+
+        // IDs of all image fields to save
+        const imgIds = [
+            'img-profile-header', 'img-channel-logo', 'img-video-thumb'
+        ];
+
+        // --- 1. LOAD DATA ON STARTUP ---
+        window.addEventListener('DOMContentLoaded', () => {
+            // Load Texts
+            textIds.forEach(id => {
+                const savedVal = localStorage.getItem(STORAGE_KEY_PREFIX + id);
+                if (savedVal) {
+                    const el = document.getElementById(id);
+                    if (el) el.innerText = savedVal;
+                }
+            });
+
+            // Load Images
+            imgIds.forEach(id => {
+                const savedImg = localStorage.getItem(STORAGE_KEY_PREFIX + id);
+                if (savedImg) {
+                    const el = document.getElementById(id);
+                    if (el) {
+                        if (el.tagName === 'IMG') {
+                            el.src = savedImg;
+                        } else {
+                            // Div background (Header profile)
+                            // Note: We need to handle big logo specially if it was SVG
+                            if(id === 'img-channel-logo') {
+                                el.innerHTML = `<img src="${savedImg}" style="width:100%; height:100%; object-fit:cover;">`;
+                            } else {
+                                el.style.backgroundImage = `url(${savedImg})`;
+                            }
+                        }
+                    }
+                }
+            });
+
+            setupTextEditing();
+            setupImageUploading();
+        });
+
+        // --- 2. TEXT EDITING SETUP ---
+        function setupTextEditing() {
+            textIds.forEach(id => {
+                const el = document.getElementById(id);
+                if(!el) return;
+
+                el.addEventListener('dblclick', function() {
+                    // Prevent multiple inputs
+                    if (this.querySelector('input')) return;
+
+                    const currentText = this.innerText;
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.value = currentText;
+                    input.className = 'edit-input';
+
+                    // Function to save and close
+                    const saveAndClose = () => {
+                        const newVal = input.value;
+                        this.innerHTML = newVal; // Remove input, set text
+                        // Save to Local Storage
+                        localStorage.setItem(STORAGE_KEY_PREFIX + id, newVal);
+                    };
+
+                    input.addEventListener('blur', saveAndClose);
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') saveAndClose();
+                    });
+
+                    this.innerHTML = '';
+                    this.appendChild(input);
+                    input.focus();
+                });
+            });
+        }
+
+        // --- 3. IMAGE UPLOADING SETUP ---
+        function setupImageUploading() {
+            imgIds.forEach(id => {
+                const el = document.getElementById(id);
+                if(!el) return;
+
+                el.addEventListener('click', () => {
+                    currentImgTarget = id;
+                    fileInput.click();
+                });
+            });
+        }
+
+        // Handle File Selection
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file && currentImgTarget) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    const result = evt.target.result; // Base64 string
+                    const el = document.getElementById(currentImgTarget);
+
+                    // Update DOM
+                    if (el.tagName === 'IMG') {
+                        el.src = result;
+                    } else if (currentImgTarget === 'img-channel-logo') {
+                        // Replace SVG with IMG
+                        el.innerHTML = `<img src="${result}" style="width:100%; height:100%; object-fit:cover;">`;
+                    } else {
+                        // Div background
+                        el.style.backgroundImage = `url(${result})`;
+                    }
+
+                    // Save to Local Storage
+                    try {
+                        localStorage.setItem(STORAGE_KEY_PREFIX + currentImgTarget, result);
+                    } catch (e) {
+                        alert("Image too large to save permanently in some browsers.");
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+            fileInput.value = ''; // Reset
+        });
+
+    </script>
+</body>
+</html>
